@@ -8,7 +8,7 @@ from articles.models import Article
 
 
 @api_view(['GET', 'POST'])
-def index(request):
+def articleAPI(request):
     if request.method == 'GET':
         articles = Article.objects.all()
         serializer = ArticleSerializer(articles, many=True)
@@ -23,7 +23,7 @@ def index(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def article_view(request, article_id):
+def articleDetail(request, article_id):
     if request.method == 'GET':
         article = get_object_or_404(Article, id=article_id)
         serializer = ArticleSerializer(article)
