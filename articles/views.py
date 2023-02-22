@@ -23,8 +23,20 @@ def index(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def article_view(reqeust, article_id):
-    if reqeust.method == 'GET':
+def article_view(request, article_id):
+    if request.method == 'GET':
         article = get_object_or_404(Article, id=article_id)
         serializer = ArticleSerializer(article)
-    return Response(serializer.data)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        article = get_object_or_404(Article, id=article_id)
+        serializer = ArticleSerializer(article, data = request.data) # 뒤에 받은 데이터를 앞에 데이터로 바꿔줌.
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    elif request.method == 'DELETE':
+        article = get_object_or_404(Article, id=article_id)
+        article.delete()
+        return Response(status=status.HTTP_200_OK)
