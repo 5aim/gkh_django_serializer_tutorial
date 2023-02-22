@@ -2,7 +2,17 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from articles.models import Article
+
 
 @api_view(['GET'])
 def index(request):
-    return Response("연결")
+    articles = Article.objects.all()
+    article = articles[0]
+    article_data = {
+        "title":article.title,
+        "content":article.content,
+        "created_at":article.created_at,
+        "updated_at":article.updated_at
+    }
+    return Response(article_data)
