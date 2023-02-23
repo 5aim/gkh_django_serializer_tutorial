@@ -40,21 +40,44 @@ class ArticleList(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def articleDetail(request, article_id):
-    if request.method == 'GET':
+# @api_view(['GET', 'PUT', 'DELETE'])
+# def articleDetail(request, article_id):
+#     if request.method == 'GET':
+#         article = get_object_or_404(Article, id=article_id)
+#         serializer = ArticleSerializer(article)
+#         return Response(serializer.data)
+
+#     elif request.method == 'PUT':
+#         article = get_object_or_404(Article, id=article_id)
+#         serializer = ArticleSerializer(article, data = request.data) # 뒤에 받은 데이터를 앞에 데이터로 바꿔줌.
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+#     elif request.method == 'DELETE':
+#         article = get_object_or_404(Article, id=article_id)
+#         article.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+# 위에 함수형 뷰에서 아래 클래스뷰로 바꿔줌.
+
+class ArticleDetail(APIView):
+
+    def get(self, request, article_id, format=None):
         article = get_object_or_404(Article, id=article_id)
         serializer = ArticleSerializer(article)
         return Response(serializer.data)
 
-    elif request.method == 'PUT':
+    def put(self, request, article_id, format=None):
         article = get_object_or_404(Article, id=article_id)
         serializer = ArticleSerializer(article, data = request.data) # 뒤에 받은 데이터를 앞에 데이터로 바꿔줌.
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
+    def delete(self, request, article_id, format=None):
         article = get_object_or_404(Article, id=article_id)
         article.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
