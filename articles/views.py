@@ -3,24 +3,42 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 
+from django.http import Http404
+from rest_framework.views import APIView
+
 from articles.serializers import ArticleSerializer
 from articles.models import Article
 
 
-@api_view(['GET', 'POST'])
-def articleAPI(request):
-    if request.method == 'GET':
+# @api_view(['GET', 'POST'])
+# def articleAPI(request):
+#     if request.method == 'GET':
+#         articles = Article.objects.all()
+#         serializer = ArticleSerializer(articles, many=True)
+#         return Response(serializer.data)
+#     elif request.method == 'POST':
+#         serializer = ArticleSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# 위에 함수형 뷰에서 아래 클래스뷰로 바꿔줌.
+
+class ArticleList(APIView):
+    def get(self, request, format=None):
         articles = Article.objects.all()
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+
+    def post(self, request, format=None):
         serializer = ArticleSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def articleDetail(request, article_id):
