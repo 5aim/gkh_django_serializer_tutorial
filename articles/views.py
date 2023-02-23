@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from articles.serializers import ArticleSerializer
 from articles.models import Article
 
+from drf_yasg.utils import swagger_auto_schema
 
 # @api_view(['GET', 'POST'])
 # def articleAPI(request):
@@ -32,6 +33,7 @@ class ArticleList(APIView):
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data)
 
+    @swagger_auto_schema(request_body=ArticleSerializer)
     def post(self, request, format=None):
         serializer = ArticleSerializer(data=request.data)
         if serializer.is_valid():
@@ -68,6 +70,7 @@ class ArticleDetail(APIView):
         serializer = ArticleSerializer(article)
         return Response(serializer.data)
 
+    
     def put(self, request, article_id, format=None):
         article = get_object_or_404(Article, id=article_id)
         serializer = ArticleSerializer(article, data = request.data) # 뒤에 받은 데이터를 앞에 데이터로 바꿔줌.
